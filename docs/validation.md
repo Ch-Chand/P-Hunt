@@ -22,7 +22,7 @@ All 20 seed products remain unscored and unapproved. No Supabase connection, RLS
 
 - Source pushed to `Ch-Chand/P-Hunt/main`.
 - Deployment attempt: https://github.com/Ch-Chand/P-Hunt/actions/runs/39027086447
-- CI run: https://github.com/Ch-Chand/P-Hunt/actions/runs/39027086421 (status recorded after completion).
+- CI run: https://github.com/Ch-Chand/P-Hunt/actions/runs/39027086421 — **PASS**: install, lint, typecheck, 60 unit tests, build and 10 desktop/mobile browser checks.
 - Open https://github.com/Ch-Chand/P-Hunt/settings/pages and select **Build and deployment → Source → GitHub Actions**. If GitHub denies Pages for the private repository under the current account plan, an owner decision is required; repository visibility has not been changed.
 - Once Pages is enabled, rerun **Deploy demo to GitHub Pages** on `main`. Successful deployment should report the project URL, normally `https://ch-chand.github.io/P-Hunt/`. This URL is expected, not verified live.
 
