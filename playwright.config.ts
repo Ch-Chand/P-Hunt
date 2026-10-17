@@ -23,7 +23,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'VITE_BASE_PATH=/P-Hunt/ pnpm --filter @research/web preview --port 4187',
+    command: 'pnpm --filter @research/web preview --port 4187',
+    env: { VITE_BASE_PATH: '/P-Hunt/' },
     url: 'http://127.0.0.1:4187/P-Hunt/',
     reuseExistingServer: false,
     timeout: 30000,

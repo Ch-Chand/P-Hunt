@@ -41,7 +41,7 @@ Scenario/research edits are session-only and reset on reload. Only the theme pre
 
 ## Connect a GitHub repository to Pages
 
-The source repository is [Ch-Chand/P-Hunt](https://github.com/Ch-Chand/P-Hunt). Deployment status is recorded in [docs/validation.md](docs/validation.md); a passing local build alone does not establish a live site. The complete setup and troubleshooting runbook is in [docs/deployments.md](docs/deployments.md).
+The source repository is [Ch-Chand/P-Hunt](https://github.com/Ch-Chand/P-Hunt). **Pages deployment is currently blocked:** GitHub denied automatic site creation (`Resource not accessible by integration`). The owner must select GitHub Actions in [Settings → Pages](https://github.com/Ch-Chand/P-Hunt/settings/pages), then rerun the deployment. Deployment status is recorded in [docs/validation.md](docs/validation.md); a passing local build alone does not establish a live site. The complete setup and troubleshooting runbook is in [docs/deployments.md](docs/deployments.md).
 
 1. Create an empty GitHub repository. GitHub Free generally requires a public repository for Pages; check the repository's plan and Pages availability before uploading anything. Only publish the supplied demo data and code.
 2. Commit the source and lockfile, add your GitHub remote, and push branch `main`. Example commands are in the runbook; do not add secrets or compiled `dist` files.
