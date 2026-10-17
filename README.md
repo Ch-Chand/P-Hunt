@@ -1,19 +1,19 @@
 # UK eBay Product Intelligence
 
-> **Work in progress — not a runnable P0/P1 release yet.** The domain rules, fixtures, connector guards and deployment configuration have been drafted. The React `App.tsx` and stylesheet are still missing, dependency installation has not completed, and lint/typecheck/tests/build have not passed. The feature and usage sections below describe the intended delivery; they are not completion claims. See [BUILD_STATUS.md](BUILD_STATUS.md).
-
 A responsive research workspace for reviewing UK supplier leads, checking evidence and modelling contribution before overhead and income tax. This repository implements **P0 and P1 only**, with no API keys, paid services or backend required.
 
 **DEMO DATA — all 20 historical leads are UNVERIFIED.** Historical advertised source prices are reference observations from the supplied CSV, not current supplier quotes or confirmed landed costs. No seed product has verified demand or a final rating. A useful outcome can be zero approved candidates.
 
-The GitHub Pages app is a **public static demo**, including when the repository itself is private. Its login shell does not authenticate users or protect business data. Do not enter confidential research, documents or credentials. Supabase Auth, private persistence, RLS and scheduled jobs are reserved for P2 and later work.
+The GitHub Pages app is a **public static demo**, including when the repository itself is private. Its access-information page does not authenticate users or protect business data. Do not enter confidential research, documents or credentials. Supabase Auth, private persistence, RLS and scheduled jobs are reserved for P2 and later work.
 
 ## Run locally
 
 Use Node.js 24 and pnpm 11.25.0 (also specified in `package.json`). If pnpm is missing, install it with `npm install --global pnpm@11.25.0`.
 
 ```bash
-pnpm install
+git clone https://github.com/Ch-Chand/P-Hunt.git
+cd P-Hunt
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
@@ -37,11 +37,11 @@ The build artifact is `apps/web/dist`; it is ignored by Git and is uploaded only
 - Inspect the evidence-complete synthetic example to understand a score breakdown. It is a separate demonstration, never a verified seed lead or a recommendation.
 - Run the local demo screening and export its clearly labelled CSV. It evaluates existing fixtures; it never calls a supplier or marketplace.
 
-Scenario/research edits are session-only and reset on reload. Theme and demo selection preferences may remain in browser storage; no private research persistence is implemented. Routes outside P0/P1 explain their future requirements rather than pretending an integration exists.
+Scenario/research edits are session-only and reset on reload. Only the theme preference remains in browser storage; no private research persistence is implemented. Routes outside P0/P1 explain their future requirements rather than pretending an integration exists.
 
 ## Connect a GitHub repository to Pages
 
-The workflow is ready; **no remote repository, Pages URL or successful deployment is claimed by this local build**. The complete setup and troubleshooting runbook is in [docs/deployments.md](docs/deployments.md).
+The source repository is [Ch-Chand/P-Hunt](https://github.com/Ch-Chand/P-Hunt). Deployment status is recorded in [docs/validation.md](docs/validation.md); a passing local build alone does not establish a live site. The complete setup and troubleshooting runbook is in [docs/deployments.md](docs/deployments.md).
 
 1. Create an empty GitHub repository. GitHub Free generally requires a public repository for Pages; check the repository's plan and Pages availability before uploading anything. Only publish the supplied demo data and code.
 2. Commit the source and lockfile, add your GitHub remote, and push branch `main`. Example commands are in the runbook; do not add secrets or compiled `dist` files.
@@ -64,3 +64,28 @@ The pnpm workspace separates the React 19/Vite web app, tested pure TypeScript d
 
 There is no scraping, invented sold-history API, automatic listing, repricing, ordering or fulfilment. eBay marketplace-history and price modelling capabilities stay disabled until source-specific licence and consent are verified. Ordinary Browse access does not provide sold history or grant unrestricted analytics rights. P2 begins only with a separately authorised Supabase implementation; no production Supabase credential is introduced here.
 
+## Browser verification
+
+The project-path production build is checked at `/P-Hunt/`. After `pnpm install`, install Chromium once, then run:
+
+```bash
+pnpm exec playwright install chromium
+```
+
+On macOS/Linux:
+
+```bash
+VITE_BASE_PATH=/P-Hunt/ pnpm build
+pnpm test:e2e
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:VITE_BASE_PATH='/P-Hunt/'
+pnpm build
+pnpm test:e2e
+Remove-Item Env:VITE_BASE_PATH
+```
+
+The tests use Chromium at desktop and iPhone-sized viewports; this is not a native Safari certification. To use an existing Chromium install, set `PLAYWRIGHT_CHROMIUM_PATH` to its executable. Tests start and stop their own preview server on port 4187. Avoid running another server on that port.

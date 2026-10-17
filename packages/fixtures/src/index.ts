@@ -1,4 +1,10 @@
-import { createProvenance, emptyEvidence, parseGbpToPence, productSchema, type Product } from '@research/domain';
+import {
+  createProvenance,
+  emptyEvidence,
+  parseGbpToPence,
+  productSchema,
+  type Product,
+} from '@research/domain';
 import { z } from 'zod';
 import historicalRows from './leads.demo.json';
 
@@ -88,52 +94,61 @@ function screenHistoricalRisk(row: HistoricalLeadRow): Pick<Product, 'risk' | 'n
   };
 }
 
-export const demoProducts: Product[] = z.array(productSchema).length(20).parse(
-  demoLeadRows.map((row, index) => {
-    const screening = screenHistoricalRisk(row);
-    const sourceRowNumber = index + 2;
-    return {
-      id: `lead-${String(index + 1).padStart(3, '0')}`,
-      title: row.product_name,
-      category: displayCategories[index] ?? 'Uncategorised',
-      supplier: row.supplier,
-      supplierSku: row.supplier_sku || null,
-      variant: null,
-      packQuantity: null,
-      risk: screening.risk,
-      historicalUnitCostPence: historicalMoney(row.supplier_cost),
-      historicalShippingPence: historicalMoney(row.shipping_cost),
-      historicalHandlingPence: historicalMoney(row.handling_cost),
-      suggestedScenarioPricePence: historicalMoney(row.target_sell_price),
-      source: createProvenance({
-        sourceType: 'historical_lead',
-        sourceUrlOrDocument: 'twenty_unverified_leads.csv',
-        sourceRecordId: `twenty_unverified_leads.csv:${sourceRowNumber}`,
-        recordedAt: null,
-        validAsOf: null,
-        capturedBy: 'Historical seed file; original researcher not recorded',
-        licenceBasis: null,
-        permittedUses: ['catalogue'],
-        permission: 'pending',
-        isDemo: true,
-        expiresAt: null,
-      }),
-      evidence: emptyEvidence(),
-      notes: [
-        'DEMO / UNVERIFIED_LEAD: historical advertised supplier figures are not live prices or verified landed costs.',
-        'Supplier SKU, exact variant, stock, delivery, returns, permission and marketplace demand are not verified. Missing values remain unknown.',
-        'Display category is inferred from the title for navigation; no supplier category or exact pack specification is verified.',
-        ...screening.notes,
-        ...(row.target_sell_price
-          ? ['The historical target selling price is a manual what-if scenario, not an observed marketplace price or a recommendation.']
-          : ['No target selling price was supplied; no product scenario price has been invented.']),
-        ...(row.handling_cost
-          ? ['The historical handling amount is unverified; supplier tax treatment and delivery cost are missing.']
-          : ['Handling cost was not supplied; it is unknown rather than free.']),
-      ],
-    };
-  }),
-);
+export const demoProducts: Product[] = z
+  .array(productSchema)
+  .length(20)
+  .parse(
+    demoLeadRows.map((row, index) => {
+      const screening = screenHistoricalRisk(row);
+      const sourceRowNumber = index + 2;
+      return {
+        id: `lead-${String(index + 1).padStart(3, '0')}`,
+        title: row.product_name,
+        category: displayCategories[index] ?? 'Uncategorised',
+        supplier: row.supplier,
+        supplierSku: row.supplier_sku || null,
+        variant: null,
+        packQuantity: null,
+        risk: screening.risk,
+        historicalUnitCostPence: historicalMoney(row.supplier_cost),
+        historicalShippingPence: historicalMoney(row.shipping_cost),
+        historicalHandlingPence: historicalMoney(row.handling_cost),
+        suggestedScenarioPricePence: historicalMoney(row.target_sell_price),
+        source: createProvenance({
+          sourceType: 'historical_lead',
+          sourceUrlOrDocument: 'twenty_unverified_leads.csv',
+          sourceRecordId: `twenty_unverified_leads.csv:${sourceRowNumber}`,
+          recordedAt: null,
+          validAsOf: null,
+          capturedBy: 'Historical seed file; original researcher not recorded',
+          licenceBasis: null,
+          permittedUses: ['catalogue'],
+          permission: 'pending',
+          isDemo: true,
+          expiresAt: null,
+        }),
+        evidence: emptyEvidence(),
+        notes: [
+          'DEMO / UNVERIFIED_LEAD: historical advertised supplier figures are not live prices or verified landed costs.',
+          'Supplier SKU, exact variant, stock, delivery, returns, permission and marketplace demand are not verified. Missing values remain unknown.',
+          'Display category is inferred from the title for navigation; no supplier category or exact pack specification is verified.',
+          ...screening.notes,
+          ...(row.target_sell_price
+            ? [
+                'The historical target selling price is a manual what-if scenario, not an observed marketplace price or a recommendation.',
+              ]
+            : [
+                'No target selling price was supplied; no product scenario price has been invented.',
+              ]),
+          ...(row.handling_cost
+            ? [
+                'The historical handling amount is unverified; supplier tax treatment and delivery cost are missing.',
+              ]
+            : ['Handling cost was not supplied; it is unknown rather than free.']),
+        ],
+      };
+    }),
+  );
 
 export const demoSeedMetadata = Object.freeze({
   mode: 'DEMO' as const,

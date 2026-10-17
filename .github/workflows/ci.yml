@@ -37,4 +37,14 @@ jobs:
         run: pnpm build
         env:
           VITE_APP_MODE: demo
-
+          VITE_BASE_PATH: /P-Hunt/
+      - name: Install Chromium for browser checks
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Desktop and mobile smoke checks
+        run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results
+          retention-days: 7

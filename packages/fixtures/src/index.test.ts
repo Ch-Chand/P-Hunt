@@ -3,7 +3,13 @@ import { demoLeadRows, demoProducts, demoSeedMetadata, historicalLeadRowSchema }
 
 describe('historical demo leads', () => {
   it('preserves all 20 exact lead names, suppliers and historical unit costs', () => {
-    expect(demoProducts.map((product) => [product.title, product.supplier, product.historicalUnitCostPence])).toEqual([
+    expect(
+      demoProducts.map((product) => [
+        product.title,
+        product.supplier,
+        product.historicalUnitCostPence,
+      ]),
+    ).toEqual([
       ['58-piece ratchet screwdriver set', 'Wholesale Finds UK', 749],
       ['Set of three white wicker storage baskets', 'Avasam', 1299],
       ['3-in-1 spray window squeegee', 'Wholesale Finds UK', 290],
@@ -30,10 +36,16 @@ describe('historical demo leads', () => {
   it('preserves missing freight, handling and prices without treating unknowns as zero', () => {
     expect(demoProducts.every((product) => product.historicalShippingPence === null)).toBe(true);
     expect(demoProducts.map((product) => product.historicalHandlingPence)).toEqual([
-      35, null, 35, ...Array<null>(17).fill(null),
+      35,
+      null,
+      35,
+      ...Array<null>(17).fill(null),
     ]);
     expect(demoProducts.map((product) => product.suggestedScenarioPricePence)).toEqual([
-      1999, 2999, 1099, ...Array<null>(17).fill(null),
+      1999,
+      2999,
+      1099,
+      ...Array<null>(17).fill(null),
     ]);
     expect(demoLeadRows[2]?.supplier_cost).toBe('2.9');
   });
@@ -42,7 +54,8 @@ describe('historical demo leads', () => {
     expect(new Set(demoProducts.map((product) => product.id)).size).toBe(20);
     expect(
       demoProducts.every(
-        (product) => product.supplierSku === null && product.variant === null && product.packQuantity === null,
+        (product) =>
+          product.supplierSku === null && product.variant === null && product.packQuantity === null,
       ),
     ).toBe(true);
     expect(demoProducts[0]?.source.sourceRecordId).toBe('twenty_unverified_leads.csv:2');
@@ -70,18 +83,23 @@ describe('historical demo leads', () => {
   it('distinguishes historical low risk from explicit heuristic safety blocks', () => {
     expect(demoProducts[2]?.risk).toBe('low');
     expect(demoProducts.filter((product) => product.risk === 'unknown')).toHaveLength(17);
-    expect(demoProducts.filter((product) => product.risk === 'high').map((product) => product.title)).toEqual([
-      'Rechargeable hand warmer',
-      'Portwest flame-resistant work shirt',
-    ]);
+    expect(
+      demoProducts.filter((product) => product.risk === 'high').map((product) => product.title),
+    ).toEqual(['Rechargeable hand warmer', 'Portwest flame-resistant work shirt']);
     expect(demoProducts[12]?.notes.join(' ')).toContain('Heuristic safety block');
     expect(demoProducts[19]?.notes.join(' ')).toContain('PPE');
   });
 
   it('rejects malformed external rows instead of silently accepting extra fields or claimed permission', () => {
     const row = demoLeadRows[0];
-    expect(historicalLeadRowSchema.safeParse({ ...row, supplier_permission_confirmed: 'yes' }).success).toBe(false);
-    expect(historicalLeadRowSchema.safeParse({ ...row, unexplained_field: 'value' }).success).toBe(false);
-    expect(historicalLeadRowSchema.safeParse({ ...row, supplier_cost: '-1.00' }).success).toBe(false);
+    expect(
+      historicalLeadRowSchema.safeParse({ ...row, supplier_permission_confirmed: 'yes' }).success,
+    ).toBe(false);
+    expect(historicalLeadRowSchema.safeParse({ ...row, unexplained_field: 'value' }).success).toBe(
+      false,
+    );
+    expect(historicalLeadRowSchema.safeParse({ ...row, supplier_cost: '-1.00' }).success).toBe(
+      false,
+    );
   });
 });

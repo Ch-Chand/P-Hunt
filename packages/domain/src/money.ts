@@ -2,7 +2,8 @@
 export type Pence = number;
 
 export function assertSafeInteger(value: number): number {
-  if (!Number.isSafeInteger(value)) throw new RangeError('Money arithmetic exceeds safe integer precision.');
+  if (!Number.isSafeInteger(value))
+    throw new RangeError('Money arithmetic exceeds safe integer precision.');
   return value;
 }
 
@@ -32,12 +33,15 @@ export function parsePercentToBps(text: string): number {
 
 export function applyRate(pence: number, rateBps: number): Pence {
   assertSafeInteger(pence);
-  if (!Number.isSafeInteger(rateBps) || rateBps < 0 || rateBps > 10_000) throw new RangeError('Rate must be integer basis points between 0 and 10000.');
+  if (!Number.isSafeInteger(rateBps) || rateBps < 0 || rateBps > 10_000)
+    throw new RangeError('Rate must be integer basis points between 0 and 10000.');
   return divideHalfUp(BigInt(pence) * BigInt(rateBps), 10_000n);
 }
 
 export function formatGbp(pence: number | null): string {
-  return pence === null ? 'Not verified' : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(pence / 100);
+  return pence === null
+    ? 'Not verified'
+    : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(pence / 100);
 }
 
 export function formatMargin(marginBps: number | null): string {

@@ -92,7 +92,12 @@ export function evaluateProviderPermission(
   if (!parsed.success) {
     return {
       allowed: false,
-      reasons: [{ code: 'INVALID_POLICY', message: 'Provider rights and capability contract is incomplete.' }],
+      reasons: [
+        {
+          code: 'INVALID_POLICY',
+          message: 'Provider rights and capability contract is incomplete.',
+        },
+      ],
     };
   }
 
@@ -103,7 +108,10 @@ export function evaluateProviderPermission(
   const nowMilliseconds = parsedNow.success ? Date.parse(parsedNow.data) : Number.NaN;
 
   if (!Number.isFinite(nowMilliseconds)) {
-    block('INVALID_CHECK_TIME', 'Permission cannot be checked without a valid UTC or offset timestamp.');
+    block(
+      'INVALID_CHECK_TIME',
+      'Permission cannot be checked without a valid UTC or offset timestamp.',
+    );
   }
   if (policy.permission !== 'approved') {
     block('PERMISSION_NOT_APPROVED', 'Documented approval for this provider is required.');
@@ -120,17 +128,26 @@ export function evaluateProviderPermission(
     block('RETENTION_NOT_DEFINED', 'A permitted retention and deletion period is required.');
   }
   if (!policy.capabilities.includes(request.capability)) {
-    block('CAPABILITY_NOT_ALLOWED', 'The provider contract does not permit the requested capability.');
+    block(
+      'CAPABILITY_NOT_ALLOWED',
+      'The provider contract does not permit the requested capability.',
+    );
   }
   if (!policy.allowedUses.includes(request.intendedUse)) {
     block('USE_NOT_ALLOWED', 'The provider contract does not permit this downstream use.');
   }
   if (policy.sourceType === 'ebay_browse') {
     if (request.capability === 'sales_history' || policy.capabilities.includes('sales_history')) {
-      block('BROWSE_IS_NOT_SOLD_HISTORY', 'eBay Browse provides active listings, not sold transaction history.');
+      block(
+        'BROWSE_IS_NOT_SOLD_HISTORY',
+        'eBay Browse provides active listings, not sold transaction history.',
+      );
     }
     if (!policy.containsEbayContent) {
-      block('EBAY_CONTENT_MISCLASSIFIED', 'Browse content must retain its eBay provenance and restrictions.');
+      block(
+        'EBAY_CONTENT_MISCLASSIFIED',
+        'Browse content must retain its eBay provenance and restrictions.',
+      );
     }
   }
   if (
@@ -139,7 +156,10 @@ export function evaluateProviderPermission(
       policy.fields.length === 0 ||
       (policy.sourceType === 'ebay_browse' && policy.scopes.length === 0))
   ) {
-    block('TECHNICAL_SCOPE_MISSING', 'The authorised API, precise fields and required scopes must be documented.');
+    block(
+      'TECHNICAL_SCOPE_MISSING',
+      'The authorised API, precise fields and required scopes must be documented.',
+    );
   }
 
   if (policy.containsEbayContent || policy.sourceType === 'ebay_browse') {
@@ -152,7 +172,10 @@ export function evaluateProviderPermission(
         request.intendedUse === 'competition_analytics') &&
       !flags.EBAY_MARKET_ANALYTICS_LICENSED
     ) {
-      block('EBAY_MARKET_ANALYTICS_DISABLED', 'eBay marketplace-history and derivative analytics are disabled.');
+      block(
+        'EBAY_MARKET_ANALYTICS_DISABLED',
+        'eBay marketplace-history and derivative analytics are disabled.',
+      );
     }
     if (request.intendedUse === 'price_modelling' && !flags.EBAY_PRICING_ANALYTICS_LICENSED) {
       block('EBAY_PRICING_ANALYTICS_DISABLED', 'Price modelling from eBay content is disabled.');

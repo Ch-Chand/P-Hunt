@@ -34,26 +34,31 @@ const enabledForContractTest: RestrictedProviderFlags = {
 };
 
 function codes(input: unknown = policy, intendedUse = 'catalogue_display' as const) {
-  return evaluateProviderPermission(input, { capability: 'active_offers', intendedUse, now }).reasons.map(
-    (reason) => reason.code,
-  );
+  return evaluateProviderPermission(input, {
+    capability: 'active_offers',
+    intendedUse,
+    now,
+  }).reasons.map((reason) => reason.code);
 }
 
 describe('restricted provider contracts', () => {
   it('ships all eBay flags off and registers no integration', () => {
-    expect([EBAY_API_ENABLED, EBAY_MARKET_ANALYTICS_LICENSED, EBAY_PRICING_ANALYTICS_LICENSED]).toEqual([
-      false,
-      false,
-      false,
-    ]);
+    expect([
+      EBAY_API_ENABLED,
+      EBAY_MARKET_ANALYTICS_LICENSED,
+      EBAY_PRICING_ANALYTICS_LICENSED,
+    ]).toEqual([false, false, false]);
     expect(registeredProviders).toEqual([]);
     expect(codes()).toContain('EBAY_API_DISABLED');
   });
 
   it('separately blocks marketplace analytics and price modelling by default', () => {
     expect(
-      evaluateProviderPermission(policy, { capability: 'active_offers', intendedUse: 'price_modelling', now })
-        .reasons.map((reason) => reason.code),
+      evaluateProviderPermission(policy, {
+        capability: 'active_offers',
+        intendedUse: 'price_modelling',
+        now,
+      }).reasons.map((reason) => reason.code),
     ).toContain('EBAY_PRICING_ANALYTICS_DISABLED');
     expect(
       evaluateProviderPermission(policy, {
@@ -66,7 +71,11 @@ describe('restricted provider contracts', () => {
 
   it('never treats Browse as sold history even with all hypothetical flags enabled', () => {
     const decision = evaluateProviderPermission(
-      { ...policy, capabilities: ['active_offers', 'sales_history'], allowedUses: ['demand_analytics'] },
+      {
+        ...policy,
+        capabilities: ['active_offers', 'sales_history'],
+        allowedUses: ['demand_analytics'],
+      },
       { capability: 'sales_history', intendedUse: 'demand_analytics', now },
       enabledForContractTest,
     );
@@ -76,20 +85,28 @@ describe('restricted provider contracts', () => {
 
   it('requires explicit approval, reviewed licence and retention even with hypothetical flags enabled', () => {
     const decision = evaluateProviderPermission(
-      { ...policy, permission: 'pending', licenceDocument: null, licenceVerifiedAt: null, retentionDays: null },
+      {
+        ...policy,
+        permission: 'pending',
+        licenceDocument: null,
+        licenceVerifiedAt: null,
+        retentionDays: null,
+      },
       { capability: 'active_offers', intendedUse: 'catalogue_display', now },
       enabledForContractTest,
     );
     expect(decision.allowed).toBe(false);
     expect(decision.reasons.map((reason) => reason.code)).toEqual(
-      expect.arrayContaining(['PERMISSION_NOT_APPROVED', 'LICENCE_NOT_VERIFIED', 'RETENTION_NOT_DEFINED']),
+      expect.arrayContaining([
+        'PERMISSION_NOT_APPROVED',
+        'LICENCE_NOT_VERIFIED',
+        'RETENTION_NOT_DEFINED',
+      ]),
     );
   });
 
   it('blocks licence expiry at the exact expiry instant', () => {
-    expect(
-      codes({ ...policy, licenceExpiresAt: now }),
-    ).toContain('LICENCE_EXPIRED');
+    expect(codes({ ...policy, licenceExpiresAt: now })).toContain('LICENCE_EXPIRED');
   });
 
   it('rejects future licence review, malformed contracts and invalid check times', () => {

@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-      pages: read
+      pages: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -55,6 +55,8 @@ jobs:
           NODE
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Build demo
         run: pnpm build
         env:
@@ -80,4 +82,3 @@ jobs:
       - name: Deploy static site
         id: deployment
         uses: actions/deploy-pages@v4
-

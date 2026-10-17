@@ -1,22 +1,9 @@
-# Current project status
+# P0/P1 demo status
 
-This is an unfinished source snapshot, prepared for transfer to the owner's GitHub account.
+P0/P1 application implementation is complete and runs without API keys. Local lint, strict typecheck, 60 unit tests and the repository-path production build pass. Desktop and mobile Chromium smoke checks cover navigation, the comparison limit and portfolio float, calculator/unknown costs, evidence gates, demo runs and CSV downloads. See `docs/validation.md` for the final validation and deployment record.
 
-## Present
+Delivered: responsive shell and theme, dashboard, 20-lead explorer/filter/sort/pagination, details/provenance, up-to-five comparison and session watchlist, integer-pence economics/scenario/threshold/portfolio calculators, typed hard-gate reasons, a separate synthetic evidence/scoring lab, local screening snapshots, safe labelled CSV, CI and GitHub Pages workflows.
 
-- pnpm workspace and React/Vite/TypeScript configuration.
-- Draft money, economics, gating and scoring domain functions with test files.
-- Twenty historical UNVERIFIED lead fixtures and disabled marketplace connector contracts.
-- Draft CI/Pages workflows and deployment/architecture documentation.
+All historical leads remain DEMO/UNVERIFIED, with no final seed ratings or approvals. Synthetic sandbox evidence is separate and explicitly fictional. Edits and run history reset on reload; only theme persists. Authentication, private persistence, supplier uploads, schedules and production integrations remain later milestones. No P2 or production Supabase credential has been introduced.
 
-## Still required before P0/P1 acceptance
-
-- Implement the React application and stylesheet (`apps/web/src/App.tsx` and `styles.css` are absent).
-- Complete dependency installation and generate the lockfile.
-- Integrate and verify explorer, comparison, calculator, dashboard and evidence explanations.
-- Run lint, typecheck, tests, build and desktop/mobile smoke checks; fix resulting failures.
-- Deploy to GitHub Pages and verify its repository base path.
-
-No successful validation or deployment is claimed. The draft workflows require a lockfile and a complete application, so they cannot pass in this snapshot. Keep this snapshot on a development branch until those tasks are complete.
-
-All supplied lead data remains DEMO/UNVERIFIED. No production Supabase credentials, P2 implementation, live marketplace data, scraping or listing/order automation has been introduced.
+The repository is private. GitHub Pages deployment additionally depends on the account plan, Pages configuration and GitHub permissions. No repository visibility change is authorised or performed. See the validation record for the observed hosted result.
