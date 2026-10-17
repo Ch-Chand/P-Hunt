@@ -1,0 +1,83 @@
+name: Deploy demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Validate and build Pages artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Test
+        run: pnpm test
+      - name: Resolve static asset base path
+        env:
+          CONFIGURED_BASE_PATH: ${{ vars.VITE_BASE_PATH }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          const [owner, repository] = process.env.GITHUB_REPOSITORY.split('/');
+          const defaultPath = repository.toLowerCase() === `${owner.toLowerCase()}.github.io`
+            ? '/'
+            : `/${repository}/`;
+          const basePath = process.env.CONFIGURED_BASE_PATH || defaultPath;
+          if (!/^\/(?:[A-Za-z0-9_-]+\/)*$/.test(basePath)) {
+            throw new Error('VITE_BASE_PATH must be / or a slash-delimited repository path such as /research/.');
+          }
+          appendFileSync(process.env.GITHUB_ENV, `VITE_BASE_PATH=${basePath}\n`);
+          console.log(`Building with public base path ${basePath}`);
+          NODE
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build demo
+        run: pnpm build
+        env:
+          VITE_APP_MODE: demo
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deploy:
+    name: Deploy GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy static site
+        id: deployment
+        uses: actions/deploy-pages@v4
+
