@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext", "moduleResolution": "Bundler", "jsx": "react-jsx",
+    "strict": true, "noUncheckedIndexedAccess": true, "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true, "noUnusedParameters": true, "skipLibCheck": true,
+    "resolveJsonModule": true, "esModuleInterop": true, "allowImportingTsExtensions": true,
+    "types": ["vite/client", "vitest/globals", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@research/domain": ["packages/domain/src/index.ts"],
+      "@research/fixtures": ["packages/fixtures/src/index.ts"],
+      "@research/connectors": ["packages/connectors/src/index.ts"],
+      "@/*": ["apps/web/src/*"]
+    }
+  },
+  "include": ["apps", "packages", "tests", "*.ts"]
+}
