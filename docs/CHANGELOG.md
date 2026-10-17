@@ -2,6 +2,8 @@
 
 ## 2026-10-17 — P0/P1
 
+- Deployed the public DEMO to https://ch-chand.github.io/P-Hunt/ after the owner enabled Pages; verified the live app at desktop and mobile viewports.
+
 - Established the pnpm React/TypeScript monorepo and a responsive demo research workspace for GitHub Pages.
 - Preserved the supplied 20 historical leads as unverified, with no invented shipping, stock, sales or final seed ratings.
 - Added session watchlists, multi-product float exposure, mobile secondary navigation and safe CSV downloads.

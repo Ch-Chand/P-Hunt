@@ -1,6 +1,6 @@
 # GitHub Pages deployment runbook
 
-This runbook deploys the P0/P1 static **DEMO** on GitHub Pages. The source repository for this delivery is `https://github.com/Ch-Chand/P-Hunt`. A passing local build does not prove that a hosted URL works.
+This runbook deploys the P0/P1 static **DEMO** on GitHub Pages. The source repository for this delivery is `https://github.com/Ch-Chand/P-Hunt`. The verified live demo is https://ch-chand.github.io/P-Hunt/; current validation evidence is in [validation.md](validation.md).
 
 ## Prerequisites and visibility
 
@@ -19,7 +19,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-For this private repository, authenticate Git using your normal credential manager. No application API key or `.env` is required. Open the Vite URL printed in the terminal. See README for optional browser testing commands, including PowerShell syntax.
+The delivered repository is public, so cloning does not require authentication. Pushing changes still requires your normal Git credential manager. No application API key or `.env` is required. Open the Vite URL printed in the terminal. See README for optional browser testing commands, including PowerShell syntax.
 
 ## Create and push a different repository
 
